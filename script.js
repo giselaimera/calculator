@@ -67,6 +67,10 @@ function operate(num1, num2, operator) {
 function updateDisplay(value) {
     const display = document.querySelector(".result");
     display.textContent = value;
+    const decimalPoint = document.querySelector(".decimal");
+    if (decimalPoint) {
+        decimalPoint.disabled = value.toString().includes(".");
+    }
 }
 
 let operators = document.querySelectorAll(".operator");
@@ -101,9 +105,12 @@ number_list.forEach((number) => {
         }
     });
 });
+
 operator_list.forEach((operatorBtn) => {
     operatorBtn.addEventListener("click", () => {
         const clickedOperator = operatorBtn.textContent;
+        const undoButton = document.querySelector(".undo"); 
+        const decimalPoint = document.querySelector(".decimal");
 
         if (clickedOperator === "=") {
             if (num1 !== "" && num2 !== "" && operator !== "") {
@@ -112,6 +119,7 @@ operator_list.forEach((operatorBtn) => {
                 num1 = result.toString();
                 num2 = "";
                 operator = "";
+                undoButton.disabled = true;
             }
         } else if (clickedOperator === "C") {
             num1 = "";
@@ -119,6 +127,29 @@ operator_list.forEach((operatorBtn) => {
             operator = "";
             result = "";
             updateDisplay("0");
+        } else if (clickedOperator === "<=") { 
+            if (num2 !== "") {
+                num2 = num2.slice(0, -1);
+                updateDisplay(num2 || "0");
+            } else if (operator !== "") {
+                operator = "";
+                updateDisplay(num1); 
+            } else if (num1 !== "") {
+                num1 = num1.slice(0, -1);
+                updateDisplay(num1 || "0");
+            }
+        } else if (clickedOperator === ".") {
+            if (operator === "") {
+                if (!num1.includes(".")) {
+                    num1 += (num1 === "" || num1 === "-") ? "0." : ".";
+                    updateDisplay(num1);
+                }
+            } else {
+                if (!num2.includes(".")) {
+                    num2 += (num2 === "") ? "0." : ".";
+                    updateDisplay(num2);
+                }
+            }
         } else {
             if (num1 === "" && clickedOperator === "-") {
                 num1 = "-";
@@ -135,6 +166,7 @@ operator_list.forEach((operatorBtn) => {
                 operator = clickedOperator;
                 updateDisplay(operator);
             }
+            undoButton.disabled = false;
         }
     });
 });
