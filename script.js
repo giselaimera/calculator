@@ -57,7 +57,7 @@ function operate(num1, num2, operator) {
             return subtractNumber(num1, num2);
         case "/":
             return divideNumber(num1, num2);
-        case "*":
+        case "x":
             return multiplyNumber(num1, num2);
         case "%":
             return remainderNumber(num1, num2);
