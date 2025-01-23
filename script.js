@@ -1,92 +1,122 @@
-function addNumber(num1,num2){
-    return num1+num2;
+function roundToDecimalPlaces(value, places) {
+    return parseFloat(value.toFixed(places));
 }
 
-function subtractNumber(num1,num2){
-    return num1-num2;
+function isValidNumber(value) {
+    return !isNaN(value) && typeof value === 'number';
 }
 
-function multiplyNumber(num1,num2){
-    return num1*num2;
+function addNumber(num1, num2) {
+    if (!isValidNumber(num1) || !isValidNumber(num2)) {
+        return "Invalid input!";
+    }
+    return roundToDecimalPlaces(num1 + num2, 8);
 }
 
-function divideNumber(num1,num2){
-    if (num2===0){
+function subtractNumber(num1, num2) {
+    if (!isValidNumber(num1) || !isValidNumber(num2)) {
+        return "Invalid input!";
+    }
+    return roundToDecimalPlaces(num1 - num2, 8);
+}
+
+function multiplyNumber(num1, num2) {
+    if (!isValidNumber(num1) || !isValidNumber(num2)) {
+        return "Invalid input!";
+    }
+    return roundToDecimalPlaces(num1 * num2, 8);
+}
+
+function divideNumber(num1, num2) {
+    if (!isValidNumber(num1) || !isValidNumber(num2)) {
+        return "Invalid input!";
+    }
+    if (num2 === 0) {
         return "Cannot divide by zero!";
     }
-    return num1/num2;
-}
-function remainderNumber(num1,num2){
-    return num1%num2;
+    return roundToDecimalPlaces(num1 / num2, 8);
 }
 
-function operate(num1,num2,operator){
-    switch(operator){
+function remainderNumber(num1, num2) {
+    if (!isValidNumber(num1) || !isValidNumber(num2)) {
+        return "Invalid input!";
+    }
+    if (num2 === 0) {
+        return "Cannot divide by zero!";
+    }
+    return roundToDecimalPlaces(num1 % num2, 8);
+}
+
+function operate(num1, num2, operator) {
+    switch (operator) {
         case "+":
-            return addNumber(num1,num2);
+            return addNumber(num1, num2);
         case "-":
-            return subtractNumber(num1,num2);
+            return subtractNumber(num1, num2);
         case "/":
-            return divideNumber(num1,num2);
+            return divideNumber(num1, num2);
         case "*":
-            return multiplyNumber(num1,num2);
+            return multiplyNumber(num1, num2);
         case "%":
-            return remainderNumber(num1,num2);
-        
+            return remainderNumber(num1, num2);
     }
 }
-function updateDisplay(value){
-    const display=document.querySelector(".result");
-    display.textContent=value;
+
+function updateDisplay(value) {
+    const display = document.querySelector(".result");
+    display.textContent = value;
 }
-let operators=document.querySelectorAll(".operator");
-const operator_list=[...operators];
-let numbers=document.querySelectorAll(".number");
-const number_list=[...numbers];
-let num1="";
-let num2="";
-let operator="";
-let result="";
-number_list.forEach((number)=>{
-number.addEventListener("click",()=>{
-    const clickedNumber=number.textContent;
-    if (operator===""){
-        num1+=clickedNumber;
-        updateDisplay(num1);
-    }
-    else{
-        num2+=clickedNumber;
-        updateDisplay(num2);
 
-    }
-});
-});
+let operators = document.querySelectorAll(".operator");
+const operator_list = [...operators];
+let numbers = document.querySelectorAll(".number");
+const number_list = [...numbers];
 
-operator_list.forEach((operatorBtn)=>{
-operatorBtn.addEventListener("click",()=>{
-    const clickedOperator=operatorBtn.textContent;
-    if(clickedOperator==="="){
-        if (num1!="" && num2!=""){
-            result=operate(parseFloat(num1),parseFloat(num2),operator);
-            updateDisplay(result);
-            num1=result;
-            num2="";
-            operator="";
+let num1 = "";
+let num2 = "";
+let operator = "";
+let result = "";
+
+number_list.forEach((number) => {
+    number.addEventListener("click", () => {
+        const clickedNumber = number.textContent;
+
+        if (operator === "") {
+            if (num1 === "" && clickedNumber === "-") {
+                num1 = "-";
+                updateDisplay(num1);
+            } else {
+                num1 += clickedNumber;
+                updateDisplay(num1);
+            }
+        } else {
+            num2 += clickedNumber;
+            updateDisplay(num2);
         }
-    }
-    else if(clickedOperator==="C"){
+    });
+});
+
+operator_list.forEach((operatorBtn) => {
+    operatorBtn.addEventListener("click", () => {
+        const clickedOperator = operatorBtn.textContent;
+
+        if (clickedOperator === "=") {
+            if (num1 !== "" && num2 !== "") {
+                result = operate(parseFloat(num1), parseFloat(num2), operator);
+                updateDisplay(result);
+                num1 = result;
+                num2 = "";
+                operator = "";
+            }
+        } else if (clickedOperator === "C") {
             num1 = "";
             num2 = "";
             operator = "";
             result = "";
-            updateDisplay("0"); 
-    }
-    else{
-    operator=clickedOperator;
-    updateDisplay(clickedOperator);
-    }
+            updateDisplay("0");
+        } else {
+            operator = clickedOperator;
+            updateDisplay(operator);
+        }
+    });
 });
-});
-
-
-
