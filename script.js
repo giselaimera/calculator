@@ -62,11 +62,31 @@ number.addEventListener("click",()=>{
 });
 });
 
-operator_list.forEach((operator)=>{
-operator.addEventListener("click",()=>{
-    const clickedOperator=operator.textContent;
+operator_list.forEach((operatorBtn)=>{
+operatorBtn.addEventListener("click",()=>{
+    const clickedOperator=operatorBtn.textContent;
+    if(clickedOperator==="="){
+        if (num1!="" && num2!=""){
+            result=operate(parseFloat(num1),parseFloat(num2),operator);
+            updateDisplay(result);
+            num1=result;
+            num2="";
+            operator="";
+        }
+    }
+    else if(clickedOperator==="C"){
+            num1 = "";
+            num2 = "";
+            operator = "";
+            result = "";
+            updateDisplay("0"); 
+    }
+    else{
+    operator=clickedOperator;
     updateDisplay(clickedOperator);
+    }
 });
 });
+
 
 
