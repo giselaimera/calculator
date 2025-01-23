@@ -3,7 +3,7 @@ function roundToDecimalPlaces(value, places) {
 }
 
 function isValidNumber(value) {
-    return !isNaN(value) && typeof value === 'number';
+    return !isNaN(value);
 }
 
 function addNumber(num1, num2) {
@@ -48,6 +48,8 @@ function remainderNumber(num1, num2) {
 }
 
 function operate(num1, num2, operator) {
+    num1 = parseFloat(num1);
+    num2 = parseFloat(num2);
     switch (operator) {
         case "+":
             return addNumber(num1, num2);
@@ -90,21 +92,24 @@ number_list.forEach((number) => {
                 updateDisplay(num1);
             }
         } else {
-            num2 += clickedNumber;
+            if (num2 === "") {
+                num2 = clickedNumber;
+            } else {
+                num2 += clickedNumber;
+            }
             updateDisplay(num2);
         }
     });
 });
-
 operator_list.forEach((operatorBtn) => {
     operatorBtn.addEventListener("click", () => {
         const clickedOperator = operatorBtn.textContent;
 
         if (clickedOperator === "=") {
-            if (num1 !== "" && num2 !== "") {
-                result = operate(parseFloat(num1), parseFloat(num2), operator);
+            if (num1 !== "" && num2 !== "" && operator !== "") {
+                result = operate(num1, num2, operator);
                 updateDisplay(result);
-                num1 = result;
+                num1 = result.toString();
                 num2 = "";
                 operator = "";
             }
@@ -115,8 +120,21 @@ operator_list.forEach((operatorBtn) => {
             result = "";
             updateDisplay("0");
         } else {
-            operator = clickedOperator;
-            updateDisplay(operator);
+            if (num1 === "" && clickedOperator === "-") {
+                num1 = "-";
+                updateDisplay(num1);
+                return;
+            }
+            if (num1 !== "" && num2 !== "" && operator !== "") {
+                result = operate(num1, num2, operator);
+                num1 = result.toString();
+                num2 = "";
+                operator = clickedOperator;
+                updateDisplay(result);
+            } else if (num1 !== "") {
+                operator = clickedOperator;
+                updateDisplay(operator);
+            }
         }
     });
 });
